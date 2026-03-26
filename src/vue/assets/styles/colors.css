@@ -1,0 +1,18 @@
+:root{
+    --primary: #009769;
+
+    --pale-primary: #E6F5F0;
+    --pale-secondary: #FEF3EA;
+
+    --bg: #F7F8FA;
+
+    --pale-bg: #F7F8FA;
+    --pale-c:  #ADAEB4;
+
+    --card-bg: white;
+    --p-btn-bg: var(--primary);
+    --p-btn-c: white;
+
+    --s-btn-bg: var(--pale-primary);
+    --s-btn-c: var(--primary);
+}
