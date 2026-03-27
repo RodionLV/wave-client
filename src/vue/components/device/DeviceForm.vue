@@ -1,12 +1,23 @@
 <script setup lang="ts">
 import Card from "@v/components/common/Card.vue"
 import { UiLabel, UiInput, UiSeparator } from "@ui/index"
-import type { ICreateDevice, IUpdateDevice } from "../dtos";
+import type { ICreateDevice, IUpdateDevice } from "@app/dtos";
 
-defineProps<{
+const props = defineProps<{
     title?: string,
+    info?: string,
     device: IUpdateDevice | ICreateDevice
 }>()
+
+const emit = defineEmits(["update:device"])
+
+function updatePropDevice(key: string) {
+    return (e: Event) => {
+        const elem = e.target as HTMLInputElement
+        console.log("update", elem.value)
+        emit("update:device", {...props.device, [key]: elem.value})
+    }
+}
 </script>
 
 <template>
@@ -14,15 +25,15 @@ defineProps<{
     <h3 class="dev-form__title">{{ title || '' }}</h3>
 
     <ui-label label="Hostname" class="dev-form__label">
-        <ui-input v-model="device.hostname" class="dev-form__input"/>
+        <ui-input :value="device.hostname" @input="(e: Event)=>updatePropDevice('hostname')(e)" class="dev-form__input"/>
     </ui-label>
 
     <ui-label label="Ip" class="dev-form__label">
-        <ui-input v-model="device.ip" class="dev-form__input"/>
+        <ui-input :value="device.ip" @input="(e: Event)=>updatePropDevice('ip')(e)" class="dev-form__input"/>
     </ui-label>
 
     <ui-label label="Location" class="dev-form__label">
-        <ui-input v-model="device.location" class="dev-form__input"/>
+        <ui-input :value="device.location" @input="(e: Event)=>updatePropDevice('location')(e)" class="dev-form__input"/>
     </ui-label>
 
     <ui-separator type="horizontal" class="dev-form__sep"/>
@@ -31,7 +42,7 @@ defineProps<{
         <slot name="actions"></slot>
     </div>
 
-    <div class="dev-form__response"></div>
+    <div class="dev-form__response">{{ info }}</div>
 </card>
 </template>
 
@@ -43,7 +54,8 @@ defineProps<{
     }
 
     &__box{
-
+        max-width: 400px;
+        width: 100%;
     }
 
     &__sep{
@@ -58,6 +70,7 @@ defineProps<{
 
     &__input{
         height: 40px;
+        width: 100%;
         font-size: 1.2em;
     }
 
@@ -70,9 +83,10 @@ defineProps<{
     }
 
     &__response{
+        color: rgb(94, 94, 94);
         margin-top: 0.8em;
         height: 1em;
-        font-size: 0.9em;
+        font-size: 0.82em;
         text-align: center;
     }
 }

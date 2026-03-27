@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { UiSearch, UiSelect, UiButton } from '@ui/index';
 import type { Option } from '../types';
+import type { ActiveFilter } from '@app/types';
+
+import { UiSearch, UiSelect, UiButton } from '@ui/index';
 
 import { ref } from "vue"
 
 defineProps<{
-    showCreateForm: () => void
+    showCreateForm: () => void,
+    search: string,
+    activeState: ActiveFilter
 }>()
+
+const emit = defineEmits(["update:search", "update:active-state"])
+
 
 const options: Option[] = [
     { label: "All", value: "all"},
@@ -14,14 +21,25 @@ const options: Option[] = [
     { label: "Not active", value: "not_active" }
 ]
 
+
 let selectedValue = ref(options[0])
+
+const onSelectedValue = (value: Option) => {
+    emit("update:active-state", value.value as ActiveFilter)
+    selectedValue.value = value
+}
+
+const onInput = (e: InputEvent) => {
+    const elem = e.target as HTMLInputElement
+    emit("update:search", elem.value)
+}
 </script>
 
 <template>
 <div class="filter__box f-row items-center">
-    <ui-search placeholder="Search by hostname..."/>
+    <ui-search placeholder="Search by hostname..." @input="onInput" :value="search"/>
 
-    <ui-select v-model:selectedValue="selectedValue" :options="options"/>
+    <ui-select @update:selected-value="onSelectedValue" :selected-value="selectedValue" :options="options"/>
 
     <ui-button class="filter__btn" @click="showCreateForm">Создать</ui-button>
 </div>

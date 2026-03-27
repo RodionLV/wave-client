@@ -32,12 +32,10 @@ export class HttpDeviceRepo implements IDeviceRepository {
     async saveDevice(device: Device): Promise<Result<{ message: string; item: Device; }, ErrorData>> {
         try {
             const { data } = await this.client.post<{ message: string, item: DeviceData }>(`/devices`, {
-                data: {
                     hostname: device.hostname.getValue(),
                     location: device.location,
                     ip: device.ip.getValue()
-                }
-            })
+                })
 
             return Ok({ message: data.message, item: new Device(data.item) })
         } catch(e) {
@@ -47,13 +45,11 @@ export class HttpDeviceRepo implements IDeviceRepository {
 
     async updateDevice(device: Device): Promise<Result<{ message: string; item: Device; }, ErrorData>> {
         try {
-            const { data } = await this.client.post<{ message: string, item: DeviceData }>(`/devices/${device.id}`, {
-                data: {
+            const { data } = await this.client.put<{ message: string, item: DeviceData }>(`/devices/${device.id}`, {
                     hostname: device.hostname.getValue(),
                     location: device.location,
                     ip: device.ip.getValue()
-                }
-            })
+                })
 
             return Ok({ message: data.message, item: new Device(data.item) })
         } catch(e) {

@@ -15,13 +15,6 @@ export interface IDeviceItem extends IUpdateDevice {
     is_active: boolean
 }
 
-export interface DataError {
-    kind: string,
-    error: Error,
-    status?: number
-}
-
-
 export interface FilterDevices {
     hostname: Hostname,
     active: ActiveFilter

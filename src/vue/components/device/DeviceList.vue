@@ -1,43 +1,10 @@
 <script setup lang="ts">
-import type { IUpdateDevice } from '../dtos/index';
+import { type IDevice } from '@app/entities/Device';
 
 defineProps<{
-    showEditForm: (dev: IUpdateDevice) => void
+    showEditForm: (dev: IDevice) => void,
+    items: IDevice[]
 }>()
-
-interface IDevice {
-    id: number,
-    hostname: string,
-    location: string,
-    ip: string,
-    is_active: boolean
-}
-
-const devices: IDevice[] = [
-    {
-        id: 1,
-        hostname: "www.example.com",
-        location: "city",
-        ip: "123.33.23.12",
-        is_active: true
-    },
-
-    {
-        id: 2,
-        hostname: "www.example.com",
-        location: "city",
-        ip: "123.33.23.12",
-        is_active: true
-    },
-
-    {
-        id: 3,
-        hostname: "www.example.com",
-        location: "city",
-        ip: "123.33.23.12",
-        is_active: false
-    },
-]
 </script>
 
 <template>
@@ -55,11 +22,11 @@ const devices: IDevice[] = [
     </thead>
     <tbody>
 
-        <tr v-for="device in devices" class="devices__item" @click="showEditForm(device)">
+        <tr v-for="device in items" class="devices__item" @click="showEditForm(device)">
             <td>{{ device.id }}</td>
-            <td>{{ device.hostname }}</td>
+            <td class="devices__hostname">{{ device.hostname.getValue() }}</td>
             <td>{{ device.location }}</td>
-            <td>{{ device.ip }}</td>
+            <td>{{ device.ip.getValue() }}</td>
             <td>
                 <span v-if="device.is_active" class="devices__active">active</span>
                 <span v-else class="devices__not-active">not active</span>
@@ -67,7 +34,10 @@ const devices: IDevice[] = [
         </tr>
 
     </tbody>
+    
 </table>
+
+<div v-if="items.length == 0" class="devices__banner f-row center">List devices is empty</div>
 </template>
 
 <style scoped lang="scss">
@@ -98,6 +68,19 @@ const devices: IDevice[] = [
         & td:first-child, th:first-child{
             border-radius: 0.3em 0 0 0.3em;
         }
+    }
+
+    &__hostname {
+        max-width: 200px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    &__banner{
+        margin-top: 1.5em;
+        width: 100%;
+        text-align: center;
     }
 
     &__item{
